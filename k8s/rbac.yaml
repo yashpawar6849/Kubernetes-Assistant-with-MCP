@@ -1,0 +1,21 @@
+# Least privilege for the MCP server. This is the REAL security boundary.
+apiVersion: v1
+kind: ServiceAccount
+metadata: {name: mcp-assistant, namespace: shop}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: {name: mcp-assistant, namespace: shop}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "events"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["patch"]          # only needed for restart_deployment
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: {name: mcp-assistant, namespace: shop}
+subjects: [{kind: ServiceAccount, name: mcp-assistant, namespace: shop}]
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: mcp-assistant}

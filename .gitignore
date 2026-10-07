@@ -1,0 +1,5 @@
+kubeconfig/
+audit.log
+.venv/
+__pycache__/
+.mcp.json
